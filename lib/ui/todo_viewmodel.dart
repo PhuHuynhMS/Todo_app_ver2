@@ -1,3 +1,4 @@
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 import '../data/category.dart';
@@ -10,7 +11,7 @@ import 'todo_state.dart';
 part 'todo_viewmodel.g.dart';
 
 @riverpod
-AppDatabase appDatabase(AppDatabaseRef ref) {
+AppDatabase appDatabase(Ref ref) {
   final db = AppDatabase();
   ref.onDispose(db.close);
   return db;
@@ -27,8 +28,12 @@ class TodoViewmodel extends _$TodoViewmodel {
     var cats  = await dao.getAllCategories();
 
     if (cats.isEmpty) {
-      for (final c in seedCategories) await dao.insertCategory(c);
-      for (final t in seedTasks)      await dao.insertTask(t);
+      for (final c in seedCategories) {
+        await dao.insertCategory(c);
+      }
+      for (final t in seedTasks) {
+        await dao.insertTask(t);
+      }
       tasks = await dao.getAllTasks();
       cats  = await dao.getAllCategories();
     }
