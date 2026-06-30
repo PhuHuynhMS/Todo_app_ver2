@@ -22,7 +22,7 @@ final appDatabaseProvider = AutoDisposeProvider<AppDatabase>.internal(
 @Deprecated('Will be removed in 3.0. Use Ref instead')
 // ignore: unused_element
 typedef AppDatabaseRef = AutoDisposeProviderRef<AppDatabase>;
-String _$todoViewmodelHash() => r'e591b95216d536606349b439cf7bcb4a635d2545';
+String _$todoViewmodelHash() => r'd21a9acf17dd7778c90c0bb9ba997ad90a67ab85';
 
 /// See also [TodoViewmodel].
 @ProviderFor(TodoViewmodel)
