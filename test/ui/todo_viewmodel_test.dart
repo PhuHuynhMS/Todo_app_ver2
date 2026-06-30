@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:todo/data/task.dart';
 import 'package:todo/data/task_database.dart' hide Category, Task;
+import 'package:todo/ui/todo_state.dart';
 import 'package:todo/ui/todo_viewmodel.dart';
 
 ProviderContainer makeContainer() {
@@ -67,5 +68,42 @@ void main() {
     await c.read(todoViewmodelProvider.future);
     await c.read(todoViewmodelProvider.notifier).addTask('new task');
     expect(c.read(todoViewmodelProvider).value!.toastMessage, 'đã thêm');
+  });
+
+  test('addTask shows toast that is replaced by second add', () async {
+    final c = makeContainer();
+    addTearDown(c.dispose);
+    await c.read(todoViewmodelProvider.future);
+    final vm = c.read(todoViewmodelProvider.notifier);
+
+    await vm.addTask('task one');
+    expect(c.read(todoViewmodelProvider).value?.toastMessage, 'đã thêm');
+
+    await vm.addTask('task two');
+    expect(c.read(todoViewmodelProvider).value?.toastMessage, 'đã thêm');
+  });
+
+  test('switchTab changes activeTab', () async {
+    final c = makeContainer();
+    addTearDown(c.dispose);
+    await c.read(todoViewmodelProvider.future);
+    final vm = c.read(todoViewmodelProvider.notifier);
+
+    vm.switchTab(ActiveTab.done);
+    expect(c.read(todoViewmodelProvider).value?.activeTab, ActiveTab.done);
+  });
+
+  test('filterByCategory filters tasks', () async {
+    final c = makeContainer();
+    addTearDown(c.dispose);
+    await c.read(todoViewmodelProvider.future);
+    final vm = c.read(todoViewmodelProvider.notifier);
+
+    vm.filterByCategory(const SpecificCategory('work'));
+    final state = c.read(todoViewmodelProvider).value!;
+    expect(state.categoryFilter, isA<SpecificCategory>());
+    for (final task in state.filtered) {
+      expect(task.categorySlug, 'work');
+    }
   });
 }

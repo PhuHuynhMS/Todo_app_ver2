@@ -6,7 +6,7 @@ part of 'todo_viewmodel.dart';
 // RiverpodGenerator
 // **************************************************************************
 
-String _$appDatabaseHash() => r'4c20f914a3c547001c20f44f1138a1d70037da2d';
+String _$appDatabaseHash() => r'4db1c5efe1a73afafa926c6e91d12e49a68b1abc';
 
 /// See also [appDatabase].
 @ProviderFor(appDatabase)
@@ -22,7 +22,7 @@ final appDatabaseProvider = AutoDisposeProvider<AppDatabase>.internal(
 @Deprecated('Will be removed in 3.0. Use Ref instead')
 // ignore: unused_element
 typedef AppDatabaseRef = AutoDisposeProviderRef<AppDatabase>;
-String _$todoViewmodelHash() => r'4f26f197fa35eb110dba226ed34714180114af98';
+String _$todoViewmodelHash() => r'e591b95216d536606349b439cf7bcb4a635d2545';
 
 /// See also [TodoViewmodel].
 @ProviderFor(TodoViewmodel)

@@ -23,17 +23,17 @@ class TaskList extends StatelessWidget {
   List<Widget> _buildItems(bool isPending) {
     if (!isPending) {
       return state.filtered
-          .map((t) => TaskItem(task: t, categories: state.categories))
+          .map((t) => TaskItem(key: ValueKey(t.id), task: t, categories: state.categories))
           .toList();
     }
     final items = <Widget>[];
     if (state.highPriority.isNotEmpty) {
       items.add(const _SectionLabel('ưu tiên cao'));
-      items.addAll(state.highPriority.map((t) => TaskItem(task: t, categories: state.categories)));
+      items.addAll(state.highPriority.map((t) => TaskItem(key: ValueKey(t.id), task: t, categories: state.categories)));
     }
     if (state.restPriority.isNotEmpty) {
       items.add(const _SectionLabel('còn lại'));
-      items.addAll(state.restPriority.map((t) => TaskItem(task: t, categories: state.categories)));
+      items.addAll(state.restPriority.map((t) => TaskItem(key: ValueKey(t.id), task: t, categories: state.categories)));
     }
     return items;
   }

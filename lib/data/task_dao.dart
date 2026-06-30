@@ -19,7 +19,8 @@ class TaskDao {
   }
 
   Future<List<model.Task>> getAllTasks() async {
-    final rows = await _db.select(_db.tasks).get();
+    final rows = await (_db.select(_db.tasks)
+      ..orderBy([(t) => OrderingTerm.desc(t.id)])).get();
     return rows.map(_rowToTask).toList();
   }
 

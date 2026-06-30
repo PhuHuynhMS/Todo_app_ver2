@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
@@ -20,6 +22,7 @@ AppDatabase appDatabase(Ref ref) {
 @riverpod
 class TodoViewmodel extends _$TodoViewmodel {
   TaskDao get _dao => TaskDao(ref.read(appDatabaseProvider));
+  Timer? _toastTimer;
 
   @override
   Future<TodoState> build() async {
@@ -38,6 +41,8 @@ class TodoViewmodel extends _$TodoViewmodel {
       cats  = await dao.getAllCategories();
     }
 
+    ref.onDispose(() => _toastTimer?.cancel());
+
     return TodoState(
       tasks: tasks,
       categories: cats,
@@ -49,13 +54,22 @@ class TodoViewmodel extends _$TodoViewmodel {
   }
 
   Future<void> toggleTask(int id) async {
-    final current = state.value!;
+    final current = state.requireValue;
     final task = current.tasks.firstWhere((t) => t.id == id);
-    final toggled = task.copyWith(done: !task.done);
-    await _dao.updateTask(toggled);
-    state = AsyncValue.data(current.copyWith(
-      tasks: current.tasks.map((t) => t.id == id ? toggled : t).toList(),
-    ));
+    final updated = task.copyWith(done: !task.done);
+    await _dao.updateTask(updated);
+    final newTasks = current.tasks.map((t) => t.id == id ? updated : t).toList();
+    state = AsyncValue.data(
+      current.copyWith(tasks: newTasks, animatingIds: {...current.animatingIds, id}),
+    );
+    Future.delayed(const Duration(milliseconds: 420), () {
+      if (state.hasValue) {
+        final s = state.requireValue;
+        state = AsyncValue.data(
+          s.copyWith(animatingIds: Set.from(s.animatingIds)..remove(id)),
+        );
+      }
+    });
   }
 
   Future<void> addTask(String text) async {
@@ -116,6 +130,7 @@ class TodoViewmodel extends _$TodoViewmodel {
   Future<void> deleteCategory(String slug) async {}
 
   void _scheduleToastDismiss() {
-    Future.delayed(const Duration(milliseconds: 1800), dismissToast);
+    _toastTimer?.cancel();
+    _toastTimer = Timer(const Duration(milliseconds: 1800), dismissToast);
   }
 }
