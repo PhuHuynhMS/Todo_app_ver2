@@ -45,7 +45,7 @@ class _TabButton extends StatelessWidget {
     return GestureDetector(
       onTap: onTap,
       child: Padding(
-        padding: const EdgeInsets.only(top: 9, bottom: 0, right: 22),
+        padding: const EdgeInsets.only(top: 9, bottom: 9, right: 22),
         child: Column(
           mainAxisSize: MainAxisSize.min,
           crossAxisAlignment: CrossAxisAlignment.start,
