@@ -17,11 +17,11 @@ class Task {
     this.timeLabel,
   });
 
-  Task copyWith({bool? done, String? categorySlug}) => Task(
+  Task copyWith({bool? done, String? categorySlug, bool clearCategorySlug = false}) => Task(
     id: id,
     text: text,
     done: done ?? this.done,
-    categorySlug: categorySlug ?? this.categorySlug,
+    categorySlug: clearCategorySlug ? null : (categorySlug ?? this.categorySlug),
     priority: priority,
     timeLabel: timeLabel,
   );

@@ -47,6 +47,10 @@ class TaskDao {
     await (_db.delete(_db.tasks)..where((t) => t.id.equals(id))).go();
   }
 
+  Future<void> deleteCategory(String slug) async {
+    await (_db.delete(_db.categories)..where((c) => c.slug.equals(slug))).go();
+  }
+
   model.Task _rowToTask(Task row) => model.Task(
     id: row.id,
     text: row.taskText,
