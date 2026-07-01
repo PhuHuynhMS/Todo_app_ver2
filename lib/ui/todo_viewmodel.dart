@@ -7,6 +7,7 @@ import '../data/category.dart';
 import '../data/task.dart';
 import '../data/task_database.dart' hide Category, Task;
 import '../data/task_dao.dart';
+import '../utils/slug.dart';
 import '../utils/task_auto_detect.dart';
 import 'todo_state.dart';
 
@@ -88,9 +89,8 @@ class TodoViewmodel extends _$TodoViewmodel {
     state = AsyncValue.data(current.copyWith(
       tasks: tasks,
       inputText: '',
-      toastMessage: 'đã thêm',
     ));
-    _scheduleToastDismiss();
+    _showToast('đã thêm');
   }
 
   Future<void> deleteTask(int id) async {
@@ -128,9 +128,48 @@ class TodoViewmodel extends _$TodoViewmodel {
     state = AsyncValue.data(current.copyWith(clearToast: true));
   }
 
-  // Stubs — implemented in later features
-  Future<void> addCategory(String label) async {}
-  Future<void> deleteCategory(String slug) async {}
+  Future<void> addCategory(String label) async {
+    final trimmed = label.trim();
+    if (trimmed.isEmpty) return;
+    final slug = toSlug(trimmed);
+    final s = state.requireValue;
+    if (s.categories.any((c) => c.slug == slug)) return;
+    final cat = Category(slug: slug, label: trimmed);
+    await _dao.insertCategory(cat);
+    state = AsyncValue.data(s.copyWith(
+      categories: [...s.categories, cat],
+    ));
+    _showToast('+ "$trimmed"');
+  }
+
+  Future<void> deleteCategory(String slug) async {
+    final s = state.requireValue;
+    final affected = s.tasks.where((t) => t.categorySlug == slug).toList();
+    for (final t in affected) {
+      final cleared = t.copyWith(clearCategorySlug: true);
+      await _dao.updateTask(cleared);
+    }
+    await _dao.deleteCategory(slug);
+    final updatedTasks = s.tasks
+        .map((t) => t.categorySlug == slug ? t.copyWith(clearCategorySlug: true) : t)
+        .toList();
+    final updatedFilter = (s.categoryFilter is SpecificCategory &&
+            (s.categoryFilter as SpecificCategory).slug == slug)
+        ? const AllCategories()
+        : s.categoryFilter;
+    state = AsyncValue.data(s.copyWith(
+      tasks: updatedTasks,
+      categories: s.categories.where((c) => c.slug != slug).toList(),
+      categoryFilter: updatedFilter,
+    ));
+    _showToast('category đã xoá');
+  }
+
+  void _showToast(String message) {
+    final s = state.requireValue;
+    state = AsyncValue.data(s.copyWith(toastMessage: message));
+    _scheduleToastDismiss();
+  }
 
   void _scheduleToastDismiss() {
     _toastTimer?.cancel();
