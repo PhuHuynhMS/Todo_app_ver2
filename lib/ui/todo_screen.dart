@@ -4,6 +4,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../theme/colors.dart';
 import 'components/bottom_sheet.dart';
 import 'components/header.dart';
+import 'components/tag_filter_row.dart';
 import 'components/task_list.dart';
 import 'components/toast.dart';
 import 'components/todo_tab_bar.dart';
@@ -29,7 +30,10 @@ class TodoScreen extends ConsumerWidget {
               Column(children: [
                 const SizedBox(height: 52),   // StatusBar placeholder
                 Header(state: state),
-                const SizedBox(height: 36),   // TagFilterRow placeholder
+                TagFilterRow(
+                  categories: state.categories,
+                  activeFilter: state.categoryFilter,
+                ),
                 TodoTabBar(activeTab: state.activeTab),
                 Expanded(child: TaskList(state: state)),
               ]),
