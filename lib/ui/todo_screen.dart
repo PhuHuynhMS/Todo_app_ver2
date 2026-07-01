@@ -6,6 +6,7 @@ import 'components/bottom_sheet.dart';
 import 'components/header.dart';
 import 'components/task_list.dart';
 import 'components/toast.dart';
+import 'components/todo_tab_bar.dart';
 import 'todo_viewmodel.dart';
 
 class TodoScreen extends ConsumerWidget {
@@ -29,7 +30,7 @@ class TodoScreen extends ConsumerWidget {
                 const SizedBox(height: 52),   // StatusBar placeholder
                 Header(state: state),
                 const SizedBox(height: 36),   // TagFilterRow placeholder
-                const SizedBox(height: 38),   // TabBar placeholder
+                TodoTabBar(activeTab: state.activeTab),
                 Expanded(child: TaskList(state: state)),
               ]),
               const Positioned(

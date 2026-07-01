@@ -110,7 +110,10 @@ class TodoViewmodel extends _$TodoViewmodel {
   void switchTab(ActiveTab tab) {
     final current = state.value;
     if (current == null) return;
-    state = AsyncValue.data(current.copyWith(activeTab: tab));
+    state = AsyncValue.data(current.copyWith(
+      activeTab: tab,
+      categoryFilter: const AllCategories(),
+    ));
   }
 
   void filterByCategory(CategoryFilter filter) {
