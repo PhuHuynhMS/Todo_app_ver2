@@ -40,6 +40,7 @@ class TagFilterRow extends ConsumerWidget {
               onDelete: null,
             ),
             ...categories.map((c) => _TagPill(
+              key: ValueKey(c.slug),
               slug: c.slug,
               label: c.label,
               isActive: activeFilter is SpecificCategory &&
@@ -65,6 +66,7 @@ class _TagPill extends StatefulWidget {
   final VoidCallback? onDelete;
 
   const _TagPill({
+    super.key,
     required this.slug,
     required this.label,
     required this.isActive,
@@ -125,25 +127,28 @@ class _TagPillState extends State<_TagPill> {
             Positioned(
               top: -5,
               right: -5,
-              child: AnimatedOpacity(
-                opacity: _deletable ? 1.0 : 0.0,
-                duration: const Duration(milliseconds: 150),
-                child: GestureDetector(
-                  onTap: () {
-                    widget.onDelete?.call();
-                    _exitDeleteMode();
-                  },
-                  child: Container(
-                    width: 14,
-                    height: 14,
-                    decoration: const BoxDecoration(
-                      color: AppColors.red,
-                      shape: BoxShape.circle,
-                    ),
-                    child: const Icon(
-                      PhosphorIconsRegular.x,
-                      size: 8,
-                      color: AppColors.text,
+              child: IgnorePointer(
+                ignoring: !_deletable,
+                child: AnimatedOpacity(
+                  opacity: _deletable ? 1.0 : 0.0,
+                  duration: const Duration(milliseconds: 150),
+                  child: GestureDetector(
+                    onTap: () {
+                      widget.onDelete?.call();
+                      _exitDeleteMode();
+                    },
+                    child: Container(
+                      width: 14,
+                      height: 14,
+                      decoration: const BoxDecoration(
+                        color: AppColors.red,
+                        shape: BoxShape.circle,
+                      ),
+                      child: const Icon(
+                        PhosphorIconsRegular.x,
+                        size: 8,
+                        color: AppColors.text,
+                      ),
                     ),
                   ),
                 ),
@@ -191,9 +196,9 @@ class _AddCategoryButtonState extends State<_AddCategoryButton> {
     WidgetsBinding.instance.addPostFrameCallback((_) => _focusNode.requestFocus());
   }
 
-  void _submit() {
+  Future<void> _submit() async {
     final text = _controller.text.trim();
-    if (text.isNotEmpty) widget.onAdd(text);
+    if (text.isNotEmpty) await widget.onAdd(text);
     _controller.clear();
     setState(() => _inputVisible = false);
     _focusNode.unfocus();
