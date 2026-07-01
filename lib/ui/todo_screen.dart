@@ -4,6 +4,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../theme/colors.dart';
 import 'components/bottom_sheet.dart';
 import 'components/header.dart';
+import 'components/status_bar.dart';
 import 'components/tag_filter_row.dart';
 import 'components/task_list.dart';
 import 'components/toast.dart';
@@ -28,7 +29,7 @@ class TodoScreen extends ConsumerWidget {
           data: (state) => Stack(
             children: [
               Column(children: [
-                const SizedBox(height: 52),   // StatusBar placeholder
+                const StatusBar(),
                 Header(state: state),
                 TagFilterRow(
                   categories: state.categories,
