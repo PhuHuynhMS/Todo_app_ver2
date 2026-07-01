@@ -27,26 +27,4 @@ dev_dependencies:
   riverpod_generator: ^2.4.0
 
 flutter:
-  fonts:
-    - family: IBMPlexMono
-      fonts:
-        - asset: assets/fonts/IBMPlexMono-Light.ttf
-          weight: 300
-        - asset: assets/fonts/IBMPlexMono-LightItalic.ttf
-          weight: 300
-          style: italic
-        - asset: assets/fonts/IBMPlexMono-Regular.ttf
-          weight: 400
-        - asset: assets/fonts/IBMPlexMono-Medium.ttf
-          weight: 500
-    - family: Inter
-      fonts:
-        - asset: assets/fonts/Inter-Light.ttf
-          weight: 300
-        - asset: assets/fonts/Inter-Regular.ttf
-          weight: 400
-        - asset: assets/fonts/Inter-Medium.ttf
-          weight: 500
-        - asset: assets/fonts/Inter-SemiBold.ttf
-          weight: 600
   uses-material-design: true
